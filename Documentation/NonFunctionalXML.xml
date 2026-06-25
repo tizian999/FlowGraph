@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blackboard-architecture name="ShopNServe" version="1.0">
+    <layers>
+        <layer id="frontend" name="Frontend">
+            <component id="shop-ui" name="ShopUI" type="ui">
+                <provides>
+                    <interface name="User Interaction Interface"/>
+                    <interface name="Request Composition Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Blackboard Message Interface"/>
+                </requires>
+            </component>
+        </layer>
+
+        <layer id="blackboard-layer" name="Blackboard Layer">
+            <component id="blackboard-controller" name="Blackboard Controller" type="controller">
+                <provides>
+                    <interface name="Message Intake Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Blackboard Coordination Interface"/>
+                </requires>
+            </component>
+
+            <component id="blackboard-service" name="Blackboard Service" type="orchestrator">
+                <provides>
+                    <interface name="Blackboard Coordination Interface"/>
+                    <interface name="State Management Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Knowledge Source Interface"/>
+                    <interface name="Graph Tracing Interface"/>
+                </requires>
+            </component>
+        </layer>
+
+        <layer id="knowledge-sources" name="Knowledge Sources">
+            <component id="capability-handlers" name="Capability Handlers" type="knowledge-source">
+                <provides>
+                    <interface name="Knowledge Source Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Domain Service Interface"/>
+                    <interface name="Blackboard State Access"/>
+                </requires>
+            </component>
+        </layer>
+
+        <layer id="domain-layer" name="Domain Layer">
+            <component id="service-layer" name="Service Layer" type="domain-service">
+                <provides>
+                    <interface name="Domain Service Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Persistence Interface"/>
+                </requires>
+            </component>
+        </layer>
+
+        <layer id="persistence-layer" name="Persistence Layer">
+            <component id="mysql" name="MySQL" type="relational-database">
+                <provides>
+                    <interface name="Relational Persistence Interface"/>
+                </provides>
+            </component>
+        </layer>
+
+        <layer id="graph-layer" name="Graph Layer">
+            <component id="session-graph-ingest-service" name="Session Graph Ingest Service" type="graph-tracing">
+                <provides>
+                    <interface name="Graph Trace Interface"/>
+                </provides>
+                <requires>
+                    <interface name="Graph Storage Interface"/>
+                </requires>
+            </component>
+
+            <component id="neo4j" name="Neo4j" type="graph-database">
+                <provides>
+                    <interface name="Graph Storage Interface"/>
+                </provides>
+            </component>
+        </layer>
+
+    </layers>
+
+    <relationships>
+
+        <relationship from="shop-ui"
+                      to="blackboard-controller"
+                      type="uses"
+                      interface="Blackboard Message Interface"/>
+
+        <relationship from="blackboard-controller"
+                      to="blackboard-service"
+                      type="delegates"
+                      interface="Blackboard Coordination Interface"/>
+
+        <relationship from="blackboard-service"
+                      to="capability-handlers"
+                      type="coordinates"
+                      interface="Knowledge Source Interface"/>
+
+        <relationship from="capability-handlers"
+                      to="service-layer"
+                      type="requires"
+                      interface="Domain Service Interface"/>
+
+        <relationship from="service-layer"
+                      to="mysql"
+                      type="persists-reads"
+                      interface="Persistence Interface"/>
+
+        <relationship from="blackboard-service"
+                      to="session-graph-ingest-service"
+                      type="traces"
+                      interface="Graph Tracing Interface"/>
+
+        <relationship from="session-graph-ingest-service"
+                      to="neo4j"
+                      type="stores-graph"
+                      interface="Graph Storage Interface"/>
+
+    </relationships>
+
+</blackboard-architecture>

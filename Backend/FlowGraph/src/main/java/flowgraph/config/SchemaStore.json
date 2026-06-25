@@ -1,0 +1,19 @@
+{
+  "schemas": [
+    {
+      "name": "LoginRequest",
+      "type": "object",
+      "properties": {
+        "username": "string",
+        "password": "string"
+      }
+    },
+    {
+      "name": "AuthToken",
+      "type": "object",
+      "properties": {
+        "token": "string"
+      }
+    }
+  ]
+}

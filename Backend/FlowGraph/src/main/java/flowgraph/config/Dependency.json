@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    {
+      "source": "Login",
+      "requires": "LoginRequest",
+      "provides": "AuthToken"
+    }
+  ]
+}

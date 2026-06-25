@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<blackboard-system name="ShopNServe" version="1.0">
+
+    <capabilities>
+
+        <!-- ================================================= -->
+        <!-- LOGIN                                              -->
+        <!-- ================================================= -->
+
+        <capability name="Login">
+
+            <authentication required="false"/>
+
+            <route view="LoginView"
+                   service="AuthService"/>
+
+            <request>
+
+                <required-data>
+                    <data name="username"/>
+                    <data name="password"/>
+                </required-data>
+
+            </request>
+
+            <response>
+
+                <provided-data>
+                    <data name="auth-token"/>
+                    <data name="auth-status"/>
+                </provided-data>
+
+            </response>
+
+            <tracing enabled="true"/>
+
+        </capability>
+
+
+        <!-- ================================================= -->
+        <!-- PRODUCT LIST                                       -->
+        <!-- ================================================= -->
+
+        <capability name="ProductList">
+
+            <authentication required="true"/>
+
+            <route view="ProductView"
+                   service="ProductService"/>
+
+            <request>
+
+                <required-data>
+                    <data name="auth-token"/>
+                </required-data>
+
+            </request>
+
+            <response>
+
+                <provided-data>
+                    <data name="productList"/>
+                </provided-data>
+
+            </response>
+
+            <tracing enabled="true"/>
+
+        </capability>
+
+
+        <!-- ================================================= -->
+        <!-- PLACE ORDER                                        -->
+        <!-- ================================================= -->
+
+        <capability name="PlaceOrder">
+
+            <authentication required="true"/>
+
+            <route view="OrderView"
+                   service="OrderService"/>
+
+            <request>
+
+                <required-data>
+                    <data name="auth-token"/>
+                    <data name="products"/>
+                </required-data>
+
+            </request>
+
+            <response>
+
+                <provided-data>
+                    <data name="orderConfirmation"/>
+                </provided-data>
+
+            </response>
+
+            <tracing enabled="true"/>
+
+        </capability>
+
+
+        <!-- ================================================= -->
+        <!-- ORDER HISTORY                                      -->
+        <!-- ================================================= -->
+
+        <capability name="OrderHistory">
+
+            <authentication required="true"/>
+
+            <route view="OrderHistoryView"
+                   service="OrderService"/>
+
+            <request>
+
+                <required-data>
+                    <data name="auth-token"/>
+                </required-data>
+
+            </request>
+
+            <response>
+
+                <provided-data>
+                    <data name="orderHistory"/>
+                </provided-data>
+
+            </response>
+
+            <tracing enabled="true"/>
+
+        </capability>
+
+    </capabilities>
+
+
+    <!-- ===================================================== -->
+    <!-- REQUEST LIFECYCLE                                     -->
+    <!-- ===================================================== -->
+
+    <request-lifecycle>
+
+        <state name="RECEIVED"/>
+        <state name="AUTHENTICATING"/>
+        <state name="ROUTED"/>
+        <state name="PROCESSING"/>
+        <state name="TRACED"/>
+        <state name="COMPLETED"/>
+        <state name="FAILED"/>
+
+    </request-lifecycle>
+
+
+    <!-- ===================================================== -->
+    <!-- TRACE CONFIGURATION                                   -->
+    <!-- ===================================================== -->
+
+    <graph-tracing>
+
+        <database>Neo4j</database>
+
+        <nodes>
+
+            <node label="Request"/>
+            <node label="Capability"/>
+            <node label="View"/>
+            <node label="Service"/>
+            <node label="Payload"/>
+            <node label="Response"/>
+
+        </nodes>
+
+    </graph-tracing>
+
+</blackboard-system>

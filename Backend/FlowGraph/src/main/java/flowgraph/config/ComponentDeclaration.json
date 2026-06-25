@@ -1,0 +1,11 @@
+{
+  "components": [
+    {
+      "id": "Login",
+      "name": "Login",
+      "function": "login",
+      "inputSchema": "LoginRequest",
+      "outputSchema": "AuthToken"
+    }
+  ]
+}
